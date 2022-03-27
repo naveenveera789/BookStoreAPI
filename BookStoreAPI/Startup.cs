@@ -58,6 +58,8 @@ namespace BookStoreAPI
             services.AddTransient<IUserRL, UserRL>();
             services.AddTransient<IBookRL, BookRL>();
             services.AddTransient<IBookBL, BookBL>();
+            services.AddTransient<ICartRL, CartRL>();
+            services.AddTransient<ICartBL, CartBL>();
 
             services.AddDataProtection();
             services.AddAuthentication(x =>
@@ -85,7 +87,9 @@ namespace BookStoreAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
             app.UseSwagger();
+
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "BookStore");

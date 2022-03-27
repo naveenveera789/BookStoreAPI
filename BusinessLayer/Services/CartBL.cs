@@ -7,31 +7,19 @@ using System.Text;
 
 namespace BusinessLayer.Services
 {
-    public class BookBL : IBookBL
+    public class CartBL : ICartBL
     {
-        IBookRL bookRL;
-        public BookBL(IBookRL bookRL)
+        ICartRL cartRL;
+        public CartBL(ICartRL cartRL)
         {
-            this.bookRL = bookRL;
+            this.cartRL = cartRL;
         }
 
-        public void AddBook(BookModel bookModel)
+        public string AddBookToCart(CartModel cartModel)
         {
             try
             {
-                this.bookRL.AddBook(bookModel);
-            }
-            catch(Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public void DeleteBook(BookModel bookModel)
-        {
-            try
-            {
-                this.bookRL.DeleteBook(bookModel);
+                return this.cartRL.AddBookToCart(cartModel);
             }
             catch (Exception e)
             {
@@ -39,11 +27,11 @@ namespace BusinessLayer.Services
             }
         }
 
-        public List<BookModel> GetAllBookData()
+        public string DeleteCart(int CartId)
         {
             try
             {
-                return this.bookRL.GetAllBookData();
+                return this.cartRL.DeleteCart(CartId);
             }
             catch (Exception e)
             {
@@ -51,11 +39,11 @@ namespace BusinessLayer.Services
             }
         }
 
-        public BookModel GetBookData(int? BookId)
+        public List<GetCartModel> GetCartData(int UserId)
         {
             try
             {
-                return this.bookRL.GetBookData(BookId);
+                return this.cartRL.GetCartData(UserId);
             }
             catch (Exception e)
             {
@@ -63,11 +51,11 @@ namespace BusinessLayer.Services
             }
         }
 
-        public void UpdateBook(BookModel bookModel)
+        public string UpdateCart(int CartId, int OrderQuantity)
         {
             try
             {
-                this.bookRL.UpdateBook(bookModel);
+                return this.cartRL.UpdateCart(CartId, OrderQuantity);
             }
             catch (Exception e)
             {

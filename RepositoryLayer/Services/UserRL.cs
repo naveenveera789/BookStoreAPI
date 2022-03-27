@@ -155,7 +155,7 @@ namespace RepositoryLayer.Services
                 using (con)
                 {
                     UserModel userModel = new UserModel();
-                    SqlCommand cmd = new SqlCommand("ForgotPassword", con);
+                    SqlCommand cmd = new SqlCommand("ForgetPassword", con);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@EmailId", email);
                     con.Open();

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace ModelLayer.Services.BookModel
+namespace ModelLayer.Services
 {
     public class BookModel
     {
@@ -14,8 +14,6 @@ namespace ModelLayer.Services.BookModel
         [Required]
         public string BookName { get; set; }
         [Required]
-        [RegularExpression(@"^[A-Z]{1}[a-z]{2,}$",
-         ErrorMessage = "Please enter valid name")]
         public string AuthorName { get; set; }
         [Required]
         [RegularExpression(@"^[0-9]{2,}$",
