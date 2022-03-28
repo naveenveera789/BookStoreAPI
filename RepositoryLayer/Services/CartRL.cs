@@ -121,8 +121,6 @@ namespace RepositoryLayer.Services
             con = new SqlConnection(this.configuration.GetConnectionString("BookStore"));
             try
             {
-                GetCartModel cartModel = new GetCartModel();
-                BookModel bookModel = new BookModel();
                 using (con)
                 {
                     List<GetCartModel> cart = new List<GetCartModel>();
@@ -135,6 +133,8 @@ namespace RepositoryLayer.Services
                     {
                         while (dr.Read())
                         {
+                            GetCartModel cartModel = new GetCartModel();
+                            BookModel bookModel = new BookModel();
                             bookModel.BookName = dr["BookName"].ToString();
                             bookModel.AuthorName = dr["AuthorName"].ToString();
                             bookModel.DiscountPrice = Convert.ToInt32(dr["DiscountPrice"]);
@@ -151,8 +151,12 @@ namespace RepositoryLayer.Services
                             cartModel.bookModel = bookModel;
                             cart.Add(cartModel);
                         }
+                        return cart;
                     }
-                    return cart;
+                    else
+                    {
+                        return null;
+                    }
                 }
             }
             catch (Exception e)
