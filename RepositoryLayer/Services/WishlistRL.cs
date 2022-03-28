@@ -9,68 +9,35 @@ using System.Text;
 
 namespace RepositoryLayer.Services
 {
-    public class CartRL : ICartRL
+    public class WishlistRL : IWishlistRL
     {
         private SqlConnection con;
         private readonly IConfiguration configuration;
-        public CartRL(IConfiguration configuration)
+        public WishlistRL(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
-        public string AddBookToCart(CartModel cartModel)
-        {
-            con = new SqlConnection(this.configuration.GetConnectionString("BookStore"));
-            try
-            {
-                using(con)
-                {
-                    SqlCommand cmd = new SqlCommand("AddBookToCart", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@UserId", cartModel.UserId);
-                    cmd.Parameters.AddWithValue("@BookId", cartModel.BookId);
-                    cmd.Parameters.AddWithValue("@OrderQuantity", cartModel.OrderQuantity);
-                    con.Open();
-                    var result = cmd.ExecuteNonQuery();
-                    if(result != 0)
-                    {
-                        return "Book added to cart successfully";
-                    }
-                    else
-                    {
-                        return "Book is not added to cart";
-                    }
-                }
-            }
-            catch(Exception e)
-            {
-                throw e;
-            }
-            finally
-            {
-                con.Close();
-            }
-        }
 
-        public string UpdateCart(int CartId, int OrderQuantity)
+        public string AddBookToWishlist(WishlistModel wishlistModel)
         {
             con = new SqlConnection(this.configuration.GetConnectionString("BookStore"));
             try
             {
                 using (con)
                 {
-                    SqlCommand cmd = new SqlCommand("UpdateCart", con);
+                    SqlCommand cmd = new SqlCommand("AddBookToWishlist", con);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@CartId", CartId);
-                    cmd.Parameters.AddWithValue("@OrderQuantity", OrderQuantity);
+                    cmd.Parameters.AddWithValue("@UserId", wishlistModel.UserId);
+                    cmd.Parameters.AddWithValue("@BookId", wishlistModel.BookId);  
                     con.Open();
-                    int result = Convert.ToInt32(cmd.ExecuteScalar());
-                    if(result != 1)
+                    var result = cmd.ExecuteNonQuery();
+                    if (result != 0)
                     {
-                        return "Cart Updated successfully";
+                        return "Book added to wishlist successfully";
                     }
                     else
                     {
-                        return "Cart is not updated";
+                        return "Book is not added to wishlist";
                     }
                 }
             }
@@ -84,25 +51,25 @@ namespace RepositoryLayer.Services
             }
         }
 
-        public string DeleteCart(int CartId)
+        public string DeleteWishlist(int WishlistId)
         {
             con = new SqlConnection(this.configuration.GetConnectionString("BookStore"));
             try
             {
                 using (con)
                 {
-                    SqlCommand cmd = new SqlCommand("DeleteCart", con);
+                    SqlCommand cmd = new SqlCommand("DeleteWishlist", con);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@CartId", CartId);
+                    cmd.Parameters.AddWithValue("@WishlistId", WishlistId);
                     con.Open();
                     int result = Convert.ToInt32(cmd.ExecuteScalar());
                     if (result != 1)
                     {
-                        return "Cart deleted successfully";
+                        return "Wishlist deleted successfully";
                     }
                     else
                     {
-                        return "Cart is not deleted";
+                        return "Wishlist is not deleted";
                     }
                 }
             }
@@ -116,24 +83,24 @@ namespace RepositoryLayer.Services
             }
         }
 
-        public List<GetCartModel> GetCartData(int UserId)
+        public List<GetWishlistModel> GetWishlistData(int UserId)
         {
             con = new SqlConnection(this.configuration.GetConnectionString("BookStore"));
             try
             {
                 using (con)
                 {
-                    List<GetCartModel> cart = new List<GetCartModel>();
-                    SqlCommand cmd = new SqlCommand("GetCart", con);
+                    List<GetWishlistModel> wishlist = new List<GetWishlistModel>();
+                    SqlCommand cmd = new SqlCommand("GetWishlist", con);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@UserId", UserId);
                     con.Open();
                     SqlDataReader dr = cmd.ExecuteReader();
-                    if(dr.HasRows)
+                    if (dr.HasRows)
                     {
                         while (dr.Read())
                         {
-                            GetCartModel cartModel = new GetCartModel();
+                            GetWishlistModel wishlistModel = new GetWishlistModel();
                             BookModel bookModel = new BookModel();
                             bookModel.BookId = Convert.ToInt32(dr["BookId"]);
                             bookModel.BookName = dr["BookName"].ToString();
@@ -145,14 +112,13 @@ namespace RepositoryLayer.Services
                             bookModel.Image = dr["Image"].ToString();
                             bookModel.ReviewCount = Convert.ToInt32(dr["ReviewCount"]);
                             bookModel.BookCount = Convert.ToInt32(dr["BookCount"]);
-                            cartModel.CartId = Convert.ToInt32(dr["CartId"]);
-                            cartModel.UserId = Convert.ToInt32(dr["UserId"]);
-                            cartModel.BookId = Convert.ToInt32(dr["BookId"]);
-                            cartModel.OrderQuantity = Convert.ToInt32(dr["OrderQuantity"]);
-                            cartModel.bookModel = bookModel;
-                            cart.Add(cartModel);
+                            wishlistModel.WishlistId = Convert.ToInt32(dr["WishlistId"]);
+                            wishlistModel.UserId = Convert.ToInt32(dr["UserId"]);
+                            wishlistModel.BookId = Convert.ToInt32(dr["BookId"]);
+                            wishlistModel.bookModel = bookModel;
+                            wishlist.Add(wishlistModel);
                         }
-                        return cart;
+                        return wishlist;
                     }
                     else
                     {

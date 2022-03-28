@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace BookStoreAPI.Controllers
 {
+    [Authorize]
     [Route("[controller]/[action]")]
     [ApiController]
     public class BookController : ControllerBase
@@ -74,7 +75,6 @@ namespace BookStoreAPI.Controllers
             }
         }
 
-        [Authorize]
         [HttpPut]
         public ActionResult UpdateBook(BookModel bookModel)
         {
@@ -89,7 +89,6 @@ namespace BookStoreAPI.Controllers
             }
         }
 
-        [Authorize]
         [HttpDelete]
         public ActionResult DeleteBook(int? BookId)
         {
