@@ -62,6 +62,8 @@ namespace BookStoreAPI
             services.AddTransient<ICartBL, CartBL>();
             services.AddTransient<IWishlistRL, WishlistRL>();
             services.AddTransient<IWishlistBL, WishlistBL>();
+            services.AddTransient<IAddressRL, AddressRL>();
+            services.AddTransient<IAddressBL, AddressBL>();
 
             services.AddDataProtection();
             services.AddAuthentication(x =>
