@@ -28,7 +28,7 @@ begin try
 			begin try
 				begin transaction
 					insert into OrderTable (UserId,AddressId,BookId,TotalPrice,QuantityToBuy,OrderPlaced) values (@UserId,@AddressId,@BookId,@QuantityToBuy*@Price,@QuantityToBuy,getdate())
-					update BookTable set BookCount=BookCount-@QuantityToBuy
+					update BookTable set BookCount=BookCount-@QuantityToBuy where BookId=@BookId
 					delete from CartTable where BookId=@BookId and UserId=@UserId
 				commit transaction
 			end try
@@ -74,13 +74,30 @@ select
 End catch
 
 
-create procedure DeleteOrder
+alter procedure DeleteOrder
 (
  @OrderId int
 )
 as
+	declare @Quantity int,@BookId int
 begin try
-	delete from OrderTable where OrderId=@OrderId
+	if(Exists(select * from OrderTable where OrderId=@OrderId))
+	begin
+		begin try
+			begin transaction
+				select @Quantity=QuantityToBuy,@BookId=BookId from OrderTable where OrderId=@OrderId
+				update BookTable set BookCount=BookCount+@Quantity where BookId=@BookId			
+				delete from OrderTable where OrderId=@OrderId
+			commit Transaction
+		end try
+		begin catch
+			rollback transaction
+		end catch
+		end
+		else
+		begin
+			Select 1
+		end
 end try
 begin catch
 select
